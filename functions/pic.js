@@ -58,6 +58,20 @@ async function handleRequest(request) {
       var randomNum = Math.floor(Math.random() * CONFIG.maxHorizontalImageNumber) + 1;
       var proxyUrl = 'https://cnb.cool/2x.nz/r3/-/git/raw/main/ri/h/' + randomNum + '.webp';
       
+      // 检查 ETag（304 Not Modified）
+      var ifNoneMatch = request.headers.get('If-None-Match');
+      var etag = `"${randomNum}"`;
+      if (ifNoneMatch === etag) {
+        return new Response(null, {
+          status: 304,
+          headers: {
+            'ETag': etag,
+            'Cache-Control': 'public, max-age=36000',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+      
       // 发起反代请求
       var proxyResponse = await fetch(proxyUrl, {
         headers: {
@@ -81,8 +95,9 @@ async function handleRequest(request) {
         status: 200,
         headers: {
           'Content-Type': 'image/webp',
-          'Cache-Control': 'public, max-age=3600',
+          'Cache-Control': 'public, max-age=36000',
           'Access-Control-Allow-Origin': '*',
+          'ETag': etag,
           'X-Image-Number': randomNum.toString(),
           'X-Proxy-Url': proxyUrl
         }
@@ -92,6 +107,20 @@ async function handleRequest(request) {
       var randomNum = Math.floor(Math.random() * CONFIG.maxVerticalImageNumber) + 1;
       var proxyUrl = 'https://cnb.cool/2x.nz/r3/-/git/raw/main/ri/v/' + randomNum + '.webp';
       
+      // 检查 ETag（304 Not Modified）
+      var ifNoneMatch = request.headers.get('If-None-Match');
+      var etag = `"${randomNum}"`;
+      if (ifNoneMatch === etag) {
+        return new Response(null, {
+          status: 304,
+          headers: {
+            'ETag': etag,
+            'Cache-Control': 'public, max-age=36000',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+      
       // 发起反代请求
       var proxyResponse = await fetch(proxyUrl, {
         headers: {
@@ -115,10 +144,12 @@ async function handleRequest(request) {
         status: 200,
         headers: {
           'Content-Type': 'image/webp',
-          'Cache-Control': 'public, max-age=3600',
+          'Cache-Control': 'public, max-age=36000',
           'Access-Control-Allow-Origin': '*',
+          'ETag': etag,
           'X-Image-Number': randomNum.toString(),
-          'X-Proxy-Url': proxyUrl
+          'X-Proxy-Url': proxyUrl,
+          'X-Device-Type': 'mobile'
         }
       });
     } else if (imgType === 'ua') {
@@ -131,6 +162,20 @@ async function handleRequest(request) {
         var randomNum = Math.floor(Math.random() * CONFIG.maxVerticalImageNumber) + 1;
         var proxyUrl = 'https://cnb.cool/2x.nz/r3/-/git/raw/main/ri/v/' + randomNum + '.webp';
         
+        // 检查 ETag（304 Not Modified）
+        var ifNoneMatch = request.headers.get('If-None-Match');
+        var etag = `"${randomNum}"`;
+        if (ifNoneMatch === etag) {
+          return new Response(null, {
+            status: 304,
+            headers: {
+              'ETag': etag,
+              'Cache-Control': 'public, max-age=36000',
+              'Access-Control-Allow-Origin': '*'
+            }
+          });
+        }
+        
         var proxyResponse = await fetch(proxyUrl, {
           headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -151,8 +196,9 @@ async function handleRequest(request) {
           status: 200,
           headers: {
             'Content-Type': 'image/webp',
-            'Cache-Control': 'public, max-age=3600',
+            'Cache-Control': 'public, max-age=36000',
             'Access-Control-Allow-Origin': '*',
+            'ETag': etag,
             'X-Image-Number': randomNum.toString(),
             'X-Proxy-Url': proxyUrl,
             'X-Device-Type': 'mobile'
@@ -163,6 +209,20 @@ async function handleRequest(request) {
         var randomNum = Math.floor(Math.random() * CONFIG.maxHorizontalImageNumber) + 1;
         var proxyUrl = 'https://cnb.cool/2x.nz/r3/-/git/raw/main/ri/h/' + randomNum + '.webp';
         
+        // 检查 ETag（304 Not Modified）
+        var ifNoneMatch = request.headers.get('If-None-Match');
+        var etag = `"${randomNum}"`;
+        if (ifNoneMatch === etag) {
+          return new Response(null, {
+            status: 304,
+            headers: {
+              'ETag': etag,
+              'Cache-Control': 'public, max-age=36000',
+              'Access-Control-Allow-Origin': '*'
+            }
+          });
+        }
+        
         var proxyResponse = await fetch(proxyUrl, {
           headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -183,8 +243,9 @@ async function handleRequest(request) {
           status: 200,
           headers: {
             'Content-Type': 'image/webp',
-            'Cache-Control': 'public, max-age=3600',
+            'Cache-Control': 'public, max-age=36000',
             'Access-Control-Allow-Origin': '*',
+            'ETag': etag,
             'X-Image-Number': randomNum.toString(),
             'X-Proxy-Url': proxyUrl,
             'X-Device-Type': 'desktop'
@@ -207,7 +268,8 @@ async function handleRequest(request) {
         status: 200,
         headers: { 
           'Content-Type': 'text/plain; charset=utf-8',
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=36000'
         }
       });
     }
